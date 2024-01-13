@@ -174,7 +174,13 @@
                   </div>
                   <!-- price-wrap.// -->
                 </div>
-                <a href="#" class="btn btn-block btn-warning">Added to cart </a>
+                <a
+                    href="{{ product.get_url }}"
+                    class="btn btn-warning"
+                  >
+                    <span class="text">Add to cart</span>
+                    <i class="fas fa-shopping-cart"></i>
+                </a>
               </figcaption>
             </figure>
           </div>
