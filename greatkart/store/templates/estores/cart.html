@@ -8,6 +8,15 @@
   <div class="container">
     <!-- ============================ COMPONENT 1 ================================= -->
 
+    
+    {% if not cart_items %}
+      <!-- == Messages ==-->
+      <h2 class="text-center">Your Shopping Cart is Empty </h2>
+      <br>
+      <div class="text-center">
+        <a href="{% url 'estores' %}" class="btn btn-warning">Continue Shopping?</a>
+      </div>
+    {% else %}   
     <div class="row">
       <aside class="col-lg-9">
         <div class="card">
@@ -32,7 +41,7 @@
                       />
                     </div>
                     <figcaption class="info">
-                      <a href="#" class="title text-dark"
+                      <a href="{{ cart_item.product.get_url }}" class="title text-dark"
                         >{{ cart_item.product.product_name }}</a
                       >
                       <p class="text-muted small">
@@ -67,7 +76,7 @@
                   <!-- price-wrap .// -->
                 </td>
                 <td class="text-right">
-                  <a href="{% url 'delete_cart' cart_item.product.id %}" class="btn btn-danger"> Remove</a>
+                  <a href="{% url 'delete_cart' cart_item.product.id %}" class="btn btn-outline-danger"> Remove</a>
                 </td>
               </tr>
               {% endfor %}
@@ -117,7 +126,7 @@
             <a href="./place-order.html" class="btn btn-warning btn-block">
               Checkout
             </a>
-            <a href="./store.html" class="btn btn-light btn-block"
+            <a href="{% url 'estores' %}" class="btn btn-outline-warning btn-block "
               >Continue Shopping</a
             >
           </div>
@@ -128,6 +137,7 @@
       <!-- col.// -->
     </div>
     <!-- row.// -->
+    {% endif %}
     <!-- ============================ COMPONENT 1 END .// ================================= -->
   </div>
   <!-- container .//  -->
