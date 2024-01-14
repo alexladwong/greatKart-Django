@@ -3,6 +3,8 @@ from .models import *
 from store.models import *
 from carts.models import CartItem
 from carts.views import _card_id
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.db.models import Q
 
 
 # Create your views here.
@@ -14,15 +16,24 @@ def estores(request, category_slug=None):
 
     if category_slug is not None:
         categories = get_object_or_404(Category, slug=category_slug)
-        products = Products.objects.filter(category=categories, is_available=True)
+        products = Products.objects.filter(
+            category=categories, is_available=True
+        ).order_by("id")
+        paginator = Paginator(products, 3)
+        page = request.GET.get("page")
+        paged_products = paginator.get_page(page)
         product_count = products.count()
     else:
-        products = Products.objects.all().filter(is_available=True)
+        products = Products.objects.all().filter(is_available=True).order_by("id")
+        paginator = Paginator(products, 6)
+        page = request.GET.get("page")
+        paged_products = paginator.get_page(page)
         product_count = products.count()
 
     context = {
-        "products": products,
+        # "products": products,
         "product_count": product_count,
+        "products": paged_products,
     }
     return render(request, "estores/estores.html", context)
 
@@ -44,3 +55,18 @@ def Product_Details(request, category_slug, product_slug):
         "in_cart": in_cart,
     }
     return render(request, "estores/product_details.html", context)
+
+
+def Search(request):
+    if "keyword" in request.GET:
+        keyword = request.GET["keyword"]
+        if keyword:
+            products = Products.objects.order_by("-created_date").filter(
+                Q(descriptions__icontains=keyword) | Q(product_name__icontains=keyword)
+            )
+            product_count = products.count()
+    context = {
+        "products": products,
+        "product_count": product_count,
+    }
+    return render(request, "estores/estores.html", context)
