@@ -1,5 +1,4 @@
-{% extends "store/base.html" %} {% load static %} {% block content %}
-
+{% extends 'store/base.html' %} {% load static %} {% block content %}
 <section class="section-content padding-y bg">
   <div class="container">
     <!-- ============================ COMPONENT 1 ================================= -->
@@ -15,92 +14,74 @@
           <!-- gallery-wrap .end// -->
         </aside>
         <main class="col-md-6 border-left">
-          <article class="content-body">
-            <h2 class="title">{{ single_product.product_name }}</h2>
+          <form action="{% url 'add_cart' single_product.id %}" method="POST">
+            {% csrf_token %}
+            <article class="content-body">
+              <h2 class="title">{{ single_product.product_name }}</h2>
 
-            <div class="mb-3">
-              <var class="price h4"> UGX {{ single_product.price }} </var>
-            </div>
+              <div class="mb-3">
+                <var class="price h4">UGX {{ single_product.price }}</var>
+              </div>
 
-            <p>{{ single_product.descriptions }}</p>
+              <p>{{ single_product.descriptions }}</p>
 
-            <hr />
-            <div class="row">
-              <div class="item-option-select">
-                <h6>Choose Color</h6>
-                <div
-                  class="btn-group btn-group-sm btn-group-toggle"
-                  data-toggle="buttons"
-                >
-                  <label class="btn btn-light">
-                    <input type="radio" name="radio_color" /> Silver
-                  </label>
-                  <label class="btn btn-light">
-                    <input type="radio" name="radio_color" /> Gray
-                  </label>
-                  <label class="btn btn-light active">
-                    <input type="radio" name="radio_color checked" /> Gold
-                  </label>
-                  <label class="btn btn-light">
-                    <input type="radio" name="radio_color" /> Black
-                  </label>
+              <hr />
+              <!--Stuck with No Backend Colors and Sizes -->
+              <div class="row">
+                <div class="item-option-select">
+                  <h6>Choose Color</h6>
+                  <select name="color" class="form-control">
+                    <option value="" disabled selected>Select Color</option>
+                    {% for i in single_product.variation_set.all %}
+                    <option value="{{ i.variation_value | lower }}">
+                      {{ i.variation_value | capfirst }}</option>
+                    </option>
+                    {% endfor %}
+                  </select>
                 </div>
               </div>
-            </div>
-            <!-- row.// -->
-            <div class="row">
-              <div class="item-option-select">
-                <h6>Select Size</h6>
-                <div
-                  class="btn-group btn-group-sm btn-group-toggle"
-                  data-toggle="buttons"
-                >
-                  <label class="btn btn-light">
-                    <input type="radio" name="radio_color" /> S
-                  </label>
-                  <label class="btn btn-light active">
-                    <input type="radio" name="radio_color" checked /> M
-                  </label>
-                  <label class="btn btn-light">
-                    <input type="radio" name="radio_color" /> L
-                  </label>
-                  <label class="btn btn-light">
-                    <input type="radio" name="radio_color" /> XL
-                  </label>
+              <!-- row.// -->
+              <div class="row">
+                <div class="item-option-select">
+                  <h6>Select Size</h6>
+                  <select name="size" class="form-control">
+                    <option value="" disabled selected>Choose Here</option>
+                    {% for i in single_product.variation_set.all %}
+
+                    <option value="{{ i.variation_value | lower }}">
+                      {{ i.variation_value | capfirst }}
+                    </option>
+                    {% endfor %}
+                  </select>
                 </div>
               </div>
-            </div>
-            <!-- row.// -->
-            <hr />
+              <!-- row.// -->
+              <hr />
 
-            {% if single_product.stock <= 0 %}
-            <h5 class="text-danger">Out of Stock</h5>
-            {% else %}
-            <b></b>
-            {% if in_cart %}
+              {% if single_product.stock <= 0 %}
+              <h5 class="text-danger">Out of Stock</h5>
+              {% else %}
+              <b></b>
+              {% if in_cart %}
+              <a href="" class="btn btn-success">
+                <span class="text">Item Added to Cart</span>
+                <i class="fas fa-check"></i>
+              </a>
 
-            <a href="" class="btn btn-success">
-              <span class="text">Item Added to Cart </span>
-              <i class="fas fa-check"></i>
-            </a>
-
-            <a href="{% url 'carts'  %}" class="btn btn-outline-warning">
-              <span class="text">View Cart</span>
-              <i class="fas fa-eye"></i>
-            </a>
-            {% else %}
-
-            <a
-              href="{% url 'add_cart' single_product.id %}"
-              class="btn btn-warning"
-            >
-              <span class="text">Add to cart</span>
-              <i class="fas fa-shopping-cart"></i>
-            </a>
-            {% endif %}
-            <b></b>
-            {% endif %}
-          </article>
+              <a href="{% url 'carts' %}" class="btn btn-outline-warning">
+                <span class="text">View Cart</span>
+                <i class="fas fa-eye"></i>
+              </a>
+              {% else %}
+              <button type="submit" class="btn btn-warning">
+                <span class="text">Add to cart</span>
+                <i class="fas fa-shopping-cart"></i>
+              </button>
+              {% endif %}
+              <b></b>
+              {% endif %}
+            </article>
+          </form>
           <!-- product-info-aside .// -->
         </main>
         <!-- col.// -->
@@ -125,7 +106,7 @@
               class="img-xs icon rounded-circle"
             />
             <div class="text">
-              <span class="date text-muted float-md-right">24.04.2020 </span>
+              <span class="date text-muted float-md-right">24.04.2020</span>
               <h6 class="mb-1">Mike John</h6>
             </div>
           </div>
@@ -144,8 +125,7 @@
     </div>
     <!-- row.// -->
   </div>
-  <!-- container .//  -->
+  <!-- container .// -->
 </section>
 <!-- ========================= SECTION CONTENT END// ========================= -->
-
-{% endblock content %}
+{% endblock %}

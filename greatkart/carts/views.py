@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from estores.models import Products
-from .models import Cart, CartItem
+from estores.models import Products, Variation
+from .models import *
 from django.core.exceptions import ObjectDoesNotExist
 
 
@@ -15,6 +15,22 @@ def _card_id(request):  # pipets for backwards
 
 def Add_to_Cart(request, product_id):
     product = Products.objects.get(id=product_id)  # Get the product
+    product_variation = []
+    if request.method == "POST":
+        for item in request.POST:
+            key = item
+            value = request.POST[key]
+
+            try:
+                variation = Variation.objects.get(
+                    product=product,
+                    variation_category__iexact=key,
+                    variation_value__iexact=value,
+                )
+                product_variation.append(variation)
+            except:
+                pass
+
     try:
         cart = Cart.objects.get(
             cart_id=_card_id(request)
@@ -27,6 +43,10 @@ def Add_to_Cart(request, product_id):
         cart_item = CartItem.objects.get(
             product=product, cart=cart
         )  # Get the cart item from the cart session
+        if len(product_variation) > 0:
+            cart_item.variation.clear()
+            for item in product_variation:
+                cart_item.variation.add(item)
         cart_item.quantity += 1  # Get the quantity
         cart_item.save()
     except CartItem.DoesNotExist:
@@ -35,6 +55,10 @@ def Add_to_Cart(request, product_id):
             quantity=1,
             cart=cart,
         )
+        if len(product_variation) > 0:
+            cart_item.variation.clear()
+            for item in product_variation:
+                cart_item.variation.add(item)
         cart_item.save()
 
     # return HttpResponse(cart_item.quantity)

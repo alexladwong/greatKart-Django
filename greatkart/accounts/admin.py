@@ -5,6 +5,11 @@ from .models import *
 
 # Register your models here.
 class AccountAdmin(UserAdmin):
+    search_fields = [
+        "username",
+        "last_name",
+        "first_name",
+    ]
     list_display = (
         "email",
         "username",
