@@ -4,7 +4,7 @@
 <section class="section-content padding-y">
   <!-- ============================ COMPONENT REGISTER   ================================= -->
   {% include "store/includes/alert.html" %}
-  <div class="card mx-auto" style="max-width: 520px; margin-top: 40px">
+  <div class="card mx-auto shadow" style="max-width: 520px; margin-top: 40px">
     <article class="card-body">
       <header class="mb-4"><h4 class="card-title">Sign up</h4></header>
       <form action="{% url 'register' %}" method="POST">
@@ -49,7 +49,7 @@
           <!-- form-group end.// -->
         </div>
         <div class="form-group">
-          <button type="submit" class="btn btn-primary btn-block">
+          <button type="submit" class="btn btn-warning btn-block">
             Register
           </button>
           <br />
@@ -65,7 +65,7 @@
   </div>
   <!-- card .// -->
   <p class="text-center mt-4">
-    Have an account? <a href="{% url 'login' %}">Log In</a>
+    Have an account? <a href="{% url 'login' %}" class="text-warning">Log In</a>
   </p>
   <br /><br />
   <!-- ============================ COMPONENT REGISTER  END.// ================================= -->

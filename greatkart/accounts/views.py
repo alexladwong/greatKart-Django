@@ -58,7 +58,7 @@ def Register(request):  # Registration form functionality
             #     request,
             #     "Thank you for registering with us. Please Check your E-mail. We just sent you the Activation Link. ",
             # )
-            return redirect("accounts/login/?command=verification&email=" + email)
+            return redirect("/accounts/login/?command=verification&email=" + email)
 
     else:
         form = RegistrationForm()
@@ -126,3 +126,79 @@ def Activate(request, uidb64, token):
 @login_required(login_url="login")
 def Dashboard(request):
     return render(request, "accounts/dashboard.html")
+
+
+# ForgotPassword(password reset password)
+def ForgotPassword(request):
+    if request.method == "POST":
+        email = request.POST["email"]
+        if Account.objects.filter(email=email).exists():
+            user = Account.objects.get(email__exact=email)
+
+            # RESET PASSWORD EMAIL
+            current_site = get_current_site(request)
+            mail_subject = "Please Reset Your Password!"
+            message = render_to_string(
+                "accounts/reset_password_email.html",
+                {
+                    "user": user,
+                    "domain": current_site,
+                    "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                    "token": default_token_generator.make_token(user),
+                },
+            )
+
+            # # Explicitly set microsecond to 0
+            # token = token.replace(microsecond=0)
+            to_email = email
+            rest_password = EmailMessage(mail_subject, message, to=[to_email])
+            rest_password.send()
+
+            messages.success(
+                request, "Password Reset Email has been sent to your Email Address!"
+            )
+            return redirect("login")
+
+        else:
+            messages.error(request, "Account does not exist")
+            return redirect("forgotpassword")
+    return render(request, "accounts/reset_password.html")
+
+
+# ResetPassword_Validator
+def ResetPassword_Validator(request, uidb64, token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = Account._default_manager.get(pk=uid)
+    except (ValueError, TypeError, OverflowError, Account.DoesNotExists):
+        user = None
+    if user is not None and default_token_generator.check_token(user, token):
+        request.session["uid"] = uid
+        # user.save()
+        messages.info(request, "Please Reset Your Password!")
+
+        return redirect("resetpassword")
+    else:
+        messages.error(request, "This link has Expired!")
+        return redirect("forgotpassword")
+
+
+# PasswordReset
+def PasswordReset(request):
+    if request.method == "POST":
+        password = request.POST["password"]
+        confirm_password = request.POST["confirm_password"]
+
+        if password == confirm_password:
+            uid = request.session.get("uid")
+            user = Account.objects.get(pk=uid)
+            user.set_password(password)
+            user.save()
+            messages.success(request, "Your password has been reset successfully!")
+            return redirect("login")
+
+        else:
+            messages.error(request, "Password Reset Failed, Password Don't Match!")
+            return redirect("resetpassword")
+    else:
+        return render(request, "accounts/password_resetAll.html")

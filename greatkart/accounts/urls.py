@@ -9,4 +9,11 @@ urlpatterns = [
     path("", views.Dashboard, name="my-dashboard"),
     # Account verification url.
     path("activate/<uidb64>/<token>/", views.Activate, name="activate"),
+    path(
+        "resetpassword_validator/<uidb64>/<token>/",
+        views.ResetPassword_Validator,
+        name="resetpassword_validator",
+    ),
+    path("forgotPassword/", views.ForgotPassword, name="forgotpassword"),
+    path("PasswordReset/", views.PasswordReset, name="resetpassword"),
 ]
