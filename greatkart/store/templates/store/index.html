@@ -7,16 +7,24 @@
     {% include "store/includes/alert.html" %}
     <section class="section-intro padding-y-sm">
       <div class="container">
-        <div class="intro-banner-wrap">
-          <img
-            src="{% static 'images/banners/cover.jpg' %}"
-            class="img-fluid rounded"
-          />
+        <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              
+              <img style="height: 23rem;" src="{% static 'images/banners/Banner02.jpeg' %}" class="d-block w-100" alt="...">
+            </div>
+            <div class="carousel-item">
+              <img style="height: 25rem;" src="{% static 'images/banners/cover.jpg' %}" class="d-block w-100" alt="...">
+            </div>
+            <div class="carousel-item">
+              <img style="height: 25rem;" src="{% static 'images/banners/Banner02.jpeg' %}" class="d-block w-100" alt="...">
+            </div>
+          </div>
         </div>
       </div>
       <!-- container //  -->
-    </section>
-    <!-- ========================= SECTION MAIN END// ========================= -->
+    <section>
+    <!--======================== SECTION MAIN END// ========================= -->
 
     <!-- ========================= SECTION  ========================= -->
     <section class="section-name padding-y-sm">
