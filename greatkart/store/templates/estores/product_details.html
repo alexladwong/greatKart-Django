@@ -23,16 +23,16 @@
                 <var class="price h4">UGX {{ single_product.price }}</var>
               </div>
 
-              <p>{{ single_product.descriptions }}</p>
+              <p>{{ single_product.description }}</p>
 
               <hr />
               <!--Stuck with No Backend Colors and Sizes -->
               <div class="row">
                 <div class="item-option-select">
                   <h6>Choose Color</h6>
-                  <select name="color" class="form-control">
+                  <select name="color" class="form-control" required>
                     <option value="" disabled selected>Select Color</option>
-                    {% for i in single_product.variation_set.all %}
+                    {% for i in single_product.variation_set.colors %}
                     <option value="{{ i.variation_value | lower }}">
                       {{ i.variation_value | capfirst }}</option>
                     </option>
@@ -40,13 +40,14 @@
                   </select>
                 </div>
               </div>
+            
               <!-- row.// -->
               <div class="row">
                 <div class="item-option-select">
                   <h6>Select Size</h6>
-                  <select name="size" class="form-control">
+                  <select name="size" class="form-control" required>
                     <option value="" disabled selected>Choose Here</option>
-                    {% for i in single_product.variation_set.all %}
+                    {% for i in single_product.variation_set.sizes %}
 
                     <option value="{{ i.variation_value | lower }}">
                       {{ i.variation_value | capfirst }}
@@ -63,10 +64,10 @@
               {% else %}
               <b></b>
               {% if in_cart %}
-              <a href="" class="btn btn-success">
-                <span class="text">Item Added to Cart</span>
-                <i class="fas fa-check"></i>
-              </a>
+              <button type="submit" class="btn btn-warning">
+                <span class="text">Add to cart</span>
+                <i class="fas fa-shopping-cart"></i>
+              </button>
 
               <a href="{% url 'carts' %}" class="btn btn-outline-warning">
                 <span class="text">View Cart</span>

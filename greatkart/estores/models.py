@@ -58,8 +58,8 @@ class Variation(models.Model):
 
     objects = VariationManager()
 
-    def __str__(self):
-        return self.variation_value
+    def __unicode__(self):
+        return self.product
 
     class Meta:
         verbose_name = "Variation"

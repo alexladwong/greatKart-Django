@@ -9,5 +9,10 @@ urlpatterns = [
         views.Remove_Cart,
         name="remove_cart",
     ),
-    path("delete_cart_items/<int:product_id>/", views.Delete_Cart, name="delete_cart"),
+    path(
+        "delete_cart_items/<int:product_id>/<int:cart_item_id>/",
+        views.Delete_Cart,
+        name="delete_cart",
+    ),
+    path("checkout/", views.Checkout, name="checkout"),
 ]

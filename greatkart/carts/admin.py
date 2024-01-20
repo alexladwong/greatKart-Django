@@ -7,6 +7,7 @@ class CartItemAdmin(admin.ModelAdmin):
     list_display = (
         "product",
         "cart",
+        "user",
         "quantity",
         "is_active",
     )

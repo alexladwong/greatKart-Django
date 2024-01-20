@@ -46,8 +46,10 @@
                       >
                       <p class="text-muted small">
                        
-                       {% if cart_item.variations.all %}
-                          {% for item in cart_item.variations.all %}
+                       {% if cart_item.variation.all %}
+                       
+                          {% for item in cart_item.variation.all %}
+                          <br>
                             {{ item.variation_category | capfirst }} : {{ item.variation_value | capfirst }}
                           {% endfor %}
                        {% endif %}
@@ -87,7 +89,7 @@
                   <!-- price-wrap .// -->
                 </td>
                 <td class="text-right">
-                  <a href="{% url 'delete_cart' cart_item.product.id %}" onclick="return confirm('Are You Sure You want to Delete this Item?')" class="btn btn-outline-danger"> Remove</a>
+                  <a href="{% url 'delete_cart' cart_item.product.id cart_item.id  %}" onclick="return confirm('Are You Sure You want to Delete this Item?')" class="btn btn-outline-danger"> Remove</a>
                 </td>
               </tr>
               {% endfor %}
@@ -134,7 +136,7 @@
                 height="26"
               />
             </p>
-            <a href="./place-order.html" class="btn btn-warning btn-block">
+            <a href="{% url 'checkout' %}" class="btn btn-warning btn-block">
               Checkout
             </a>
             <a href="{% url 'estores' %}" class="btn btn-outline-warning btn-block "
