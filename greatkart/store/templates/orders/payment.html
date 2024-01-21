@@ -1,5 +1,6 @@
 {% extends "store/base.html" %} {% load static %}
 <br />
+
 {% block title %}
 <title>MrDollarStore | estore</title>
 {% endblock title %} {% block content %}
@@ -58,8 +59,7 @@
                         <th scope="col">Product</th>
                         <th scope="col" width="120">Quantity</th>
                         <th scope="col" width="120">Price</th>
-                      
-                      </tr>
+                        
                     </thead>
                     <tbody>
                       {% for cart_item in cart_items %}
@@ -146,9 +146,10 @@
                 height="26"
               />
             </p>
-            <a href="{% url 'checkout' %}" class="btn btn-warning btn-block">
-              Make Payment
-            </a>
+            <button type="submit" name="submit" img class="btn btn-block mb-3 text-dark" style="background:#f6ca00;"><img src="{% static 'images/momo.png' %}" style="height: 35px; width: 40px;" alt=""> Pay With MoMo Pay</button>
+
+            <div id="paypal-button-container"></div>
+            
           </div>
           <!-- card-body.// -->
         </div>
@@ -163,5 +164,45 @@
   <!-- container .//  -->
 </section>
 <!-- ========================= SECTION CONTENT END// ========================= -->
+
+
+
+<script src="https://www.paypal.com/sdk/js?client-id=Act9Kk4zpLlUuv8RL0-kqHyJhn-9_STW2Jy16oU1UCLSD3dqYKa7RFNIoefecPNmzkG3UvgQ5OWRj14A&currency=USD"></script>
+
+<script>
+    // Render the PayPal button into #paypal-button-container
+    paypal.Buttons({
+        style: {
+            color:  'blue',
+            shape:  'rect',
+            label:  'pay',
+            height: 45
+        },
+
+        // Set up the transaction
+        createOrder: function(data, actions) {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: '88.44'
+                    }
+                }]
+            });
+        },
+
+        // Finalize the transaction
+        onApprove: function(data, actions) {
+            return actions.order.capture().then(function(orderData) {
+                // Successful capture! For demo purposes:
+                console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+                
+            });
+        }
+
+
+    }).render('#paypal-button-container');
+</script>
+
+
 
 {% endblock content %}

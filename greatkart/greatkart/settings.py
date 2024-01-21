@@ -160,3 +160,5 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = "kintuale@gmail.com"
 EMAIL_HOST_PASSWORD = "ufwn vbxg zmyn bjpi"
 EMAIL_USE_TLS = True
+
+SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
