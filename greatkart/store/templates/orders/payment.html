@@ -44,9 +44,15 @@
                   src="{% static './images/misc/payments.png' %}"
                   height="26"
                   />
-                </p></a>
+                </p>
                 <h5 class="text-center text-dark">&</h5>
-                <h6 class="card-title text-muted">Mobile Money...</h6>
+                <h6 class="card-title text-muted"><img
+                  src="{% static './images/momo.png' %}"
+                  height="36"
+                  /> Mobile Money...  <img
+                  src="{% static './images/Airtel.png' %}"
+                  height="56"
+                </h6></a>
             
         </div>
         <div class="card text-center">
@@ -146,7 +152,7 @@
                 height="26"
               />
             </p>
-            <button type="submit" name="submit" img class="btn btn-block mb-3 text-dark" style="background:#f6ca00;"><img src="{% static 'images/momo.png' %}" style="height: 35px; width: 40px;" alt=""> Pay With MoMo Pay</button>
+            <button type="submit" name="submit" img class="btn btn-block mb-3 text-dark" style="background:#f6ca00;"><img src="{% static 'images/momo.png' %}" style="height: 40px; width: 65px;" alt=""> Pay With MoMo Pay</button>
 
             <div id="paypal-button-container"></div>
             
@@ -170,6 +176,28 @@
 <script src="https://www.paypal.com/sdk/js?client-id=Act9Kk4zpLlUuv8RL0-kqHyJhn-9_STW2Jy16oU1UCLSD3dqYKa7RFNIoefecPNmzkG3UvgQ5OWRj14A&currency=USD"></script>
 
 <script>
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+    var amount = "{{ grand_total }}"
+    var url = "{% url 'payments' %}"
+    var csrftoken = getCookie('csrftoken');
+    var orderID = "{{order.order_number}}";
+    var payment_method = 'PayPal'
     // Render the PayPal button into #paypal-button-container
     paypal.Buttons({
         style: {
@@ -184,7 +212,7 @@
             return actions.order.create({
                 purchase_units: [{
                     amount: {
-                        value: '88.44'
+                        value: amount,
                     }
                 }]
             });
@@ -192,9 +220,32 @@
 
         // Finalize the transaction
         onApprove: function(data, actions) {
-            return actions.order.capture().then(function(orderData) {
-                // Successful capture! For demo purposes:
-                console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+            return actions.order.capture().then(function(details) {
+                // Successful message to the user
+               // alert('Transaction Completed successfully!');
+                console.log(details);
+               // console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+                sendData();
+                
+                function sendData() {
+                    fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-type': 'application/json',
+                            'X-CSRFToken': csrftoken,
+                        },
+                        // Body Results
+                        body: JSON.stringify({
+                            orderID: orderID,
+                            transID: details.id,
+                            payment_method: payment_method,
+                            status : details.status,
+                        }),
+                    })
+                   // .then(response => response.json())
+                   // .then(data => console.log(data));
+                }
+
                 
             });
         }

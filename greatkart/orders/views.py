@@ -4,11 +4,52 @@ import datetime
 from carts.models import *
 from .models import *
 from .forms import OrderForm
+import json
 
 
 # Create your views here.
 # Payment methods
 def Payments(request):
+    body = json.loads(request.body)
+    order = Order.objects.get(
+        user=request.user, is_ordered=False, order_number=body["orderID"]
+    )
+
+    # Store the Transaction Details
+    payment = Payment(
+        user=request.user,
+        payment_id=body["transID"],
+        payment_method=body["payment_method"],
+        amount_paid=order.order_total,
+        status=body["status"],
+    )
+    payment.save()
+
+    order.payment = payment
+    order.is_ordered = True
+    order.save()
+
+    # Move the cart items to the Ordered Products Table
+    cart_items = CartItem.objects.filter(user=request.user)
+
+    for item in cart_items:
+        orderproduct = orderProducts()
+        orderproduct.order_id = order.id
+        orderproduct.payment = payment
+        orderproduct.user_id = request.user.id
+        orderproduct.product_id = item.product_id
+        orderproduct.quantity = item.quantity
+        orderproduct.product_price = item.product.price
+        orderproduct.ordered = True
+        orderproduct.save()
+
+    # Reduce The Quantity of the Sold products
+
+    # Clear the Cart Items
+
+    # Send Email Notifications on Orders to Customer
+
+    # Send Order numbers and Transaction ID Back to SendData through JsonResponse
     return render(request, "orders/payment.html")
 
 
