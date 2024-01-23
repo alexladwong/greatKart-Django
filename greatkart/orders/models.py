@@ -68,7 +68,7 @@ class orderProducts(models.Model):
     )
     user = models.ForeignKey(Account, on_delete=models.CASCADE)
     product = models.ForeignKey(Products, on_delete=models.CASCADE)
-    variation = models.ForeignKey(Variation, on_delete=models.CASCADE)
+    variation = models.ManyToManyField(Variation, blank=True)
 
     quantity = models.IntegerField()
     product_price = models.FloatField()
