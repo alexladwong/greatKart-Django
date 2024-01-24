@@ -52,32 +52,28 @@ def Payments(request):
         orderproduct = orderProducts.objects.get(id=orderproduct.id)
         orderproduct.variation.set(product_variation)
         orderproduct.save()
-        
 
         # Reduce The Quantity of the Sold products
         product = Products.objects.get(id=item.product_id)
         product.stock -= item.quantity
         product.save()
-        
 
     # Clear the Cart Items
     CartItem.objects.filter(user=request.user).delete()
-    
 
     # Send Email Notifications on Orders to Customer
     mail_subject = "Thank you for your order, you have received your order product"
-    message = render_to_string("orders/order_received_email.html",
-                {
-                    "user": request.user,
-                    "order": order,
-                   
-                },
-            )
+    message = render_to_string(
+        "orders/order_received_email.html",
+        {
+            "user": request.user,
+            "order": order,
+        },
+    )
 
     to_email = request.user.email
     send_email = EmailMessage(mail_subject, message, to=[to_email])
     send_email.send()
-    
 
     # Send Order numbers and Transaction ID Back to SendData through JsonResponse
     return render(request, "orders/payment.html")
