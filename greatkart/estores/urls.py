@@ -11,4 +11,6 @@ urlpatterns = [
         name="products_details",
     ),
     path("search-products/", views.Search, name="search"),
+    # Customers Reviews
+    path("submit-review/<int:product_id>/", views.CustomerReview, name="submit_review"),
 ]
