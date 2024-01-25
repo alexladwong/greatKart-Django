@@ -107,8 +107,8 @@
                         <!-- col.//Cart Quantity -->
                         <td>
                           <div class="price-wrap">
-                            <var class="price">UGX {{ cart_item.sub_total }}</var>
-                            <small class="text-muted">UGX {{ cart_item.product.price }} each </small>
+                            <var class="price">${{ cart_item.sub_total }} USD</var>
+                            <small class="text-muted">${{ cart_item.product.price }} USD each </small>
                           </div>
                           <!-- price-wrap .// -->
                         </td>
@@ -198,6 +198,7 @@
     var csrftoken = getCookie('csrftoken');
     var orderID = "{{order.order_number}}";
     var payment_method = 'PayPal'
+    var redirect_url = "{% url 'order_completed' %}"
     // Render the PayPal button into #paypal-button-container
     paypal.Buttons({
         style: {
@@ -242,8 +243,10 @@
                             status : details.status,
                         }),
                     })
-                   // .then(response => response.json())
-                   // .then(data => console.log(data));
+                   .then((response) => response.json())
+                   .then((data) => {
+                    window.location.href = redirect_url + '?order_number='+data.order_number+'&payment_id='+data.transID;
+                   });
                 }
 
                 

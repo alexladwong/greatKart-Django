@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 import datetime
 from carts.models import *
 from .models import *
@@ -62,7 +62,7 @@ def Payments(request):
     CartItem.objects.filter(user=request.user).delete()
 
     # Send Email Notifications on Orders to Customer
-    mail_subject = "Thank you for your order, you have received your order product"
+    mail_subject = "Thank you for your order, you have received your order product!"
     message = render_to_string(
         "orders/order_received_email.html",
         {
@@ -76,7 +76,11 @@ def Payments(request):
     send_email.send()
 
     # Send Order numbers and Transaction ID Back to SendData through JsonResponse
-    return render(request, "orders/payment.html")
+    data = {
+        "order_number": order.order_number,
+        "transID": payment.payment_id,
+    }
+    return JsonResponse(data)
 
 
 # Place order
@@ -143,3 +147,30 @@ def Place_Orders(request, total=0, quantity=0):
     else:
         # form = OrderForm
         return redirect(reverse("checkout"))
+
+
+# Order Complete
+def OrderCompleted(request):
+    order_number = request.GET.get("order_number")
+    transID = request.GET.get("payment_id")
+
+    try:
+        order = Order.objects.get(order_number=order_number, is_ordered=True)
+        order_products = orderProducts.objects.filter(order_id=order.id)
+        payment = Payment.objects.get(payment_id=transID)
+
+        # Order complete with payment information
+        subtotal = 0
+        for i in order_products:
+            subtotal += i.product_price * i.quantity
+        context = {
+            "order": order,
+            "order_products": order_products,
+            "order_number": order.order_number,
+            "transID": payment.payment_id,
+            "payment": payment,
+            "subtotal": subtotal,
+        }
+        return render(request, "orders/order_complete.html", context)
+    except (Payment.DoesNotExist, Order.DoesNotExist):
+        return redirect("/")
