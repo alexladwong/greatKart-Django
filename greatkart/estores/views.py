@@ -1,5 +1,7 @@
 from django.shortcuts import get_object_or_404, get_list_or_404, redirect, render
 
+from orders.models import orderProducts
+
 from .forms import ReviewForm
 from .models import *
 from store.models import *
@@ -53,9 +55,26 @@ def Product_Details(request, category_slug, product_slug):
         # exit()
     except Exception as e:
         raise e
+
+    if request.user.is_authenticated:
+        try:
+            orderproduct = orderProducts.objects.filter(
+                user=request.user, product_id=single_product.id
+            ).exists()
+
+        except orderProducts.DoesNotExist:
+            orderproduct = None
+    else:
+        orderproduct = None
+
+    # Fetch the Product Reviews and the stars
+    reviews = ReviewRating.objects.filter(product_id=single_product.id, status=True)
+
     context = {
         "single_product": single_product,
         "in_cart": in_cart,
+        "orderproduct": orderproduct,
+        "reviews": reviews,
     }
     return render(request, "estores/product_details.html", context)
 
