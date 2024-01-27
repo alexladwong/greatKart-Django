@@ -16,4 +16,5 @@ urlpatterns = [
     ),
     path("forgotPassword/", views.ForgotPassword, name="forgotpassword"),
     path("PasswordReset/", views.PasswordReset, name="resetpassword"),
+    path("my-orders/", views.MyOrders, name="my_orders"),
 ]
