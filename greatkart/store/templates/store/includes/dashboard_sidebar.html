@@ -17,9 +17,16 @@
       My Oders
     </a>
     <a
-      class="list-group-item text-dark {% if 'edite-profile' in request.path %} active btn btn-warning text-white {% endif %}"
-      href="#"
-      >Edit Profile
+      class="list-group-item text-dark {% if '/my-orders/' in request.path %} disabled btn btn-warning text-white {% endif %}"
+      href="{% url 'my_orders' %}"
+    >
+      Wish List || <span>Coming Soon!</span>
+    </a>
+    <a
+      class="list-group-item text-dark {% if '/edit-profile/' in request.path %} active btn btn-warning text-white {% endif %}"
+      href="{% url 'edit_profile' %}"
+    >
+      Profile Settings
     </a>
     <a class="list-group-item text-muted disabled" href="#">
       My Selling Items || <span>Coming Soon!</span>
