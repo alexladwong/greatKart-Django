@@ -189,9 +189,12 @@ def Dashboard(request):
     orders = Order.objects.order_by("-created_at").filter(
         user_id=request.user.id, is_ordered=True
     )
+
+    userprofile = UserProfile.objects.get(user_id=request.user.id)
     orders_count = orders.count()
     context = {
         "orders_count": orders_count,
+        "userprofile": userprofile,
     }
     return render(request, "accounts/dashboard.html", context)
 
@@ -286,7 +289,7 @@ def MyOrders(request):
     return render(request, "accounts/myOrders.html", context)
 
 
-# EditProfile
+# EditProfile User Profile
 @login_required(login_url="login")
 def EditProfile(request):
     userprofile = get_object_or_404(UserProfile, user=request.user)
@@ -300,7 +303,7 @@ def EditProfile(request):
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
-            # userprofile.save()
+            userprofile.save()
 
             messages.success(request, "Your profile has been updated successfully!")
             return redirect("edit_profile")

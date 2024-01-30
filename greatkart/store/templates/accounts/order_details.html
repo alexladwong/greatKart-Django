@@ -91,10 +91,10 @@
                                {{ i.variation_category | capfirst }} : {{ i.variation_value | capfirst }} 
                                
                                {% endfor %}
-                               {% comment %} <img
+                              <img
                                src="{{ item.product.images.url }}"
-                               class="img-sm"
-                             /> {% endcomment %}
+                               class="img-sm" style="width: auto;"
+                             /> 
                                <i>
                             {% endif %}
                              
@@ -129,7 +129,7 @@
                 </div>
               </div>
               <div class="invoice-footer mt25">
-                <p class="text-center">Thank you for shopping with us!</p>
+                <p class="text-center">Thank you for shopping with us!  </p>
               </div>
             </div>
             <!-- col-lg-12 end here -->
