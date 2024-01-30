@@ -1,9 +1,9 @@
 from django.shortcuts import get_object_or_404, redirect, render
 
 from carts.models import *
-from orders.models import Order
+from orders.models import Order, orderProducts
 from .forms import *
-from .models import Account
+from .models import *
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
@@ -40,6 +40,12 @@ def Register(request):  # Registration form functionality
             )
             user.phone_number = phone_number
             user.save()
+
+            # Create User Profile
+            profile = UserProfile()
+            profile.user_id = user.id
+            profile.profile_picture = "default/default-user.png"
+            profile.save()
 
             # USER ACTIVATION
             current_site = get_current_site(request)
@@ -228,6 +234,7 @@ def ForgotPassword(request):
 
 
 # ResetPassword_Validator
+@login_required(login_url="login")
 def ResetPassword_Validator(request, uidb64, token):
     try:
         uid = urlsafe_base64_decode(uidb64).decode()
@@ -246,6 +253,7 @@ def ResetPassword_Validator(request, uidb64, token):
 
 
 # PasswordReset
+@login_required(login_url="login")
 def PasswordReset(request):
     if request.method == "POST":
         password = request.POST["password"]
@@ -267,6 +275,7 @@ def PasswordReset(request):
 
 
 # MyOrders
+@login_required(login_url="login")
 def MyOrders(request):
     orders = Order.objects.filter(user=request.user, is_ordered=True).order_by(
         "-created_at"
@@ -278,25 +287,83 @@ def MyOrders(request):
 
 
 # EditProfile
+@login_required(login_url="login")
 def EditProfile(request):
     userprofile = get_object_or_404(UserProfile, user=request.user)
+
     if request.method == "POST":
         user_form = UserForm(request.POST, instance=request.user)
         profile_form = UserProfileForm(
             request.POST, request.FILES, instance=userprofile
         )
+
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
+            # userprofile.save()
 
             messages.success(request, "Your profile has been updated successfully!")
             return redirect("edit_profile")
+        else:
+            messages.error(
+                request,
+                "An error occurred. Please check the form.",
+            )
+
     else:
         user_form = UserForm(instance=request.user)
         profile_form = UserProfileForm(instance=userprofile)
+
     context = {
         "user_form": user_form,
         "profile_form": profile_form,
         "userprofile": userprofile,
     }
+
     return render(request, "accounts/edit_profile.html", context)
+
+
+# ChangeProfilePassword
+@login_required(login_url="login")
+def ChangeProfilePassword(request):
+    if request.method == "POST":
+        current_password = request.POST["current_password"]
+        new_password = request.POST["new_password"]
+        confirm_password = request.POST["confirm_password"]
+
+        # User objects
+        user = Account.objects.get(username__exact=request.user.username)
+
+        if new_password == confirm_password:
+            success = user.check_password(current_password)
+            if success:
+                user.set_password(new_password)
+                user.save()
+                # auth.logout(request)
+                messages.success(request, "Password changed successfully!")
+                return redirect("change_profile_password")
+            else:
+                messages.error(
+                    request, "Please Check your current password and try again."
+                )
+                return redirect("change_profile_password")
+        else:
+            messages.error(request, "Password does not match!")
+            return redirect("change_profile_password")
+    return render(request, "accounts/change_profile_password.html")
+
+
+# OrderDetails
+@login_required(login_url="login")
+def OrderDetails(request, timestamp):
+    order_details = orderProducts.objects.filter(order__order_number=timestamp)
+    order = Order.objects.get(order_number=timestamp)
+    subtotal = 0
+    for i in order_details:
+        subtotal += i.product_price * i.quantity
+    context = {
+        "order_details": order_details,
+        "order": order,
+        "subtotal": subtotal,
+    }
+    return render(request, "accounts/order_details.html", context)

@@ -32,8 +32,8 @@
       My Selling Items || <span>Coming Soon!</span>
     </a>
     <a
-      class="list-group-item text-dark text-warning {% if 'change-password' in request.path %} active btn btn-warning text-white {% endif %}"
-      href="#"
+      class="list-group-item text-dark text-warning {% if '/change_profile_password/' in request.path %} active btn btn-warning text-white {% endif %}"
+      href="{% url 'change_profile_password' %}"
     >
       Change Password
     </a>

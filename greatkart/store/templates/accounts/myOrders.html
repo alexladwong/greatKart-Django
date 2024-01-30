@@ -31,7 +31,7 @@
                     <tbody>
                     {% for order in orders %}
                     <tr>
-                        <th scope="row text-muted p-2">{{ order.order_number }}</th>
+                       <th scope="row text-muted p-2"><a href="{% url 'order_details' order.order_number %}">{{ order.order_number }}</a></th> 
                         <th class="text-muted p-2">{{ order.full_name }}</th>
                         <th class="text-muted p-2">{{ order.phone_number }}</th>
                         <th class="text-muted p-2">${{ order.order_total }} USD</th>

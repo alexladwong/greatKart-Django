@@ -18,4 +18,11 @@ urlpatterns = [
     path("PasswordReset/", views.PasswordReset, name="resetpassword"),
     path("my-orders/", views.MyOrders, name="my_orders"),
     path("edit-profile/", views.EditProfile, name="edit_profile"),
+    path(
+        "change_profile_password/",
+        views.ChangeProfilePassword,
+        name="change_profile_password",
+    ),
+    # path("order-details/<int:order_id>/", views.OrderDetails, name="order_details"),
+    path("order-details/<str:timestamp>/", views.OrderDetails, name="order_details"),
 ]
