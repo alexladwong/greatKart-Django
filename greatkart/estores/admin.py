@@ -1,6 +1,14 @@
 from django.contrib import admin
 from .models import *
 
+# import admin_thumbnails
+
+
+# @admin_thumbnails.thumbnails("image")
+class ProductGalleryInline(admin.TabularInline):
+    model = ProductGallery
+    extra = 1
+
 
 # Register your models here.
 class ProductAdmin(admin.ModelAdmin):
@@ -13,6 +21,7 @@ class ProductAdmin(admin.ModelAdmin):
         "is_available",
     )
     prepopulated_fields = {"slug": ("product_name",)}
+    inlines = [ProductGalleryInline]
 
 
 class VariationAdmin(admin.ModelAdmin):
@@ -34,3 +43,4 @@ class VariationAdmin(admin.ModelAdmin):
 admin.site.register(Products, ProductAdmin)
 admin.site.register(Variation, VariationAdmin)
 admin.site.register(ReviewRating)
+admin.site.register(ProductGallery)

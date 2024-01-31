@@ -5,7 +5,7 @@
 <title>Order Details | MrDollasStore</title>
 {% endblock title %} {% block content %}
 
-
+<div id="pt">
 <div
   class="container"
   style="
@@ -131,8 +131,10 @@
               <div class="invoice-footer mt25">
                 <p class="text-center">Thank you for shopping with us!  </p>
               </div>
+              <button onclick="myfun('pt')" class="btn btn-outline-warning mt-3">Print Invoice</button>
             </div>
             <!-- col-lg-12 end here -->
+            
           </div>
           <!-- End .row -->
         </div>
@@ -142,5 +144,16 @@
     <!-- col-lg-12 end here -->
   </div>
 </div>
+</div>
+
+<script type="text/javascript">
+  function myfun(pa){
+  var bk = document.body.innerHTML;
+  var dv = document.getElementById(pa).innerHTML;
+      document.body.innerHTML = dv;
+      window.print();
+  }
+
+</script>
 
 {% endblock content %}

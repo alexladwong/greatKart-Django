@@ -100,3 +100,15 @@ class ReviewRating(models.Model):
 
     def __str__(self):
         return self.subject
+
+
+class ProductGallery(models.Model):
+    product = models.ForeignKey(Products, default=None, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to="etores/products", max_length=255)
+
+    def __str__(self):
+        return self.product.product_name
+
+    class Meta:
+        verbose_name = "ProductGallery"
+        verbose_name_plural = "Product Gallery"
