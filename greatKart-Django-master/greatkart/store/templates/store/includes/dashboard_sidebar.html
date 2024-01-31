@@ -1,0 +1,50 @@
+<aside class="col-md-3">
+  <!--   SIDEBAR   -->
+  <ul class="list-group">
+    <a class="list-group-item btn btn-outline-warning" href="#">
+      My order history
+    </a>
+    <a
+      class="list-group-item text-dark {% if '/accounts/' == request.path %} active btn btn-warning text-white {% endif %}"
+      href="{% url 'my-dashboard' %}"
+    >
+      My Dashboard
+    </a>
+    <a
+      class="list-group-item text-dark {% if '/my-orders/' in request.path %} active btn btn-warning text-white {% endif %}"
+      href="{% url 'my_orders' %}"
+    >
+      My Oders
+    </a>
+    <a
+      class="list-group-item text-dark {% if '/my-orders/' in request.path %} disabled btn btn-warning text-white {% endif %}"
+      href="{% url 'my_orders' %}"
+    >
+      Wish List || <span>Coming Soon!</span>
+    </a>
+    <a
+      class="list-group-item text-dark {% if '/edit-profile/' in request.path %} active btn btn-warning text-white {% endif %}"
+      href="{% url 'edit_profile' %}"
+    >
+      Profile Settings
+    </a>
+    <a class="list-group-item text-muted disabled" href="#">
+      My Selling Items || <span>Coming Soon!</span>
+    </a>
+    <a
+      class="list-group-item text-dark text-warning {% if '/change_profile_password/' in request.path %} active btn btn-warning text-white {% endif %}"
+      href="{% url 'change_profile_password' %}"
+    >
+      Change Password
+    </a>
+  </ul>
+  <br />
+  <a
+    class="btn btn-warning btn-block text-dark {% if 'logout' in request.path %} active btn btn-warning text-white {% endif %}"
+    href="{% url 'logout' %}"
+  >
+    <i class="fa fa-power-off"></i>
+    <span class="text">Log out</span>
+  </a>
+  <!--   SIDEBAR .//END   -->
+</aside>
