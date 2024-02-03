@@ -1,0 +1,12 @@
+django>=2.2
+django-ipware
+
+[dev]
+twine
+
+[tests]
+pytest
+pytest-cov
+pytest-django
+pytest-flake8
+pytest-pythonpath

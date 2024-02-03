@@ -9,6 +9,7 @@ def Home(request):
     )
 
     # Fetch the Product Reviews and the stars
+    reviews = None
     for product in products:
         reviews = ReviewRating.objects.filter(product_id=product.id, status=True)
 
