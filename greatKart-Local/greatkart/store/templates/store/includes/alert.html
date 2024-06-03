@@ -1,16 +1,14 @@
-{% if messages %} 
-
-{% for message in messages %}
+{% if messages %} {% for message in messages %}
 <div id="messages" class="container">
   <div
-    {% if message.tags  %}
-   
-    
-
+    {%
+    if
+    message.tags
+    %}
     class="alert alert-{{ message.tags }}"
-    {% endif %}
-    
-    
+    {%
+    endif
+    %}
     role="alert"
   >
     <button type="button" class="close" data-dimiss="alert">
@@ -20,6 +18,4 @@
     {{ message }}
   </div>
 </div>
-{% endfor %} 
-
-{% endif %}
+{% endfor %} {% endif %}

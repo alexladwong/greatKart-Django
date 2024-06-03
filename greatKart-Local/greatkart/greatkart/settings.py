@@ -14,8 +14,6 @@ import os
 from decouple import config
 from pathlib import Path
 
-# from .jazzmin import JAZZMIN_SETTINGS
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -39,7 +37,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    # "jazzmin",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -52,7 +49,6 @@ INSTALLED_APPS = [
     "estores",
     "carts",
     "orders",
-    "admin_honeypot",
 ]
 
 MIDDLEWARE = [
@@ -64,14 +60,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "django_session_timeout.middleware.SessionTimeoutMiddleware",
 ]
-# Session timeout middleware
-SESSION_EXPIRE_SECONDS = 300  # 5mins seconds logout automatically
-
-SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
-SESSION_TIMEOUT_REDIRECT = "/accounts/login/"
-
 
 ROOT_URLCONF = "greatkart.urls"
 
@@ -159,14 +148,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-# EMAIL_BACKEND = "backend.email.EmailBackend"\
-
-# Admin's name and email to send email
-# ADMINS = [
-#     ("estores-login/", "kintuale@gmail.com"),
-# ]
-
+# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_BACKEND = 'accounts.backends.email_backend.EmailBackend'
+# EMAIL_BACKEND = "backend.email.EmailBackend"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -179,10 +163,25 @@ MESSAGE_TAGS = {
     # 50: "critical",
 }
 
+# Email Confirmation 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_BACKEND = 'accounts.backends.email_backend.EmailBackend'
+
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = config('EMAIL_PORT', cast=int)
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+
 # SMTP Configuration
-EMAIL_HOST = config("EMAIL_HOST")
-EMAIL_PORT = config("EMAIL_PORT", cast=int)
-EMAIL_HOST_USER = config("EMAIL_PORT")
-EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
-EMAIL_USE_TLS = config("EMAIL_USE_TLS", cast=bool)
+# Email configuration
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = config('EMAIL_PORT', cast=int)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'MrDollarStore Online-MultiVendors <kintuale@gmail.com>'
 SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
+
+
+

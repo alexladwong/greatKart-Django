@@ -21,10 +21,7 @@ from django.conf import settings
 
 
 urlpatterns = [
-    # Duplicate/ fake admin login for hackers
-    path("admin/", include("admin_honeypot.urls", namespace="admin_honeypot")),
-    #  REAL admin login
-    path("estores-login/", admin.site.urls),
+    path("admin/", admin.site.urls),
     path("", include("store.urls")),
     path("estores/", include("estores.urls")),
     # path("store/", include("store.urls")),
