@@ -1,5 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+
+from django.contrib.auth.models import AbstractUser
 
 
 # Create your models here.
@@ -83,3 +85,4 @@ class UserProfile(models.Model):
 
     def full_address(self):
         return f"{self.address_line_1} {self.address_line_2}"
+
